@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description="MQTT distributed dumb clients runn
 parser.add_argument('--host', '-H', dest='host', type=str, help="host address of the broker", default="127.0.0.1")
 parser.add_argument('--port', '-p', dest='port', type=int, help="port of the broker", default=1883)
 parser.add_argument('--num', '-n', dest='num', type=int, help="number of duplcated clients", default=1)
-parser.add_argument('--payload-size', '-P', dest='payload_size', type=int, help="extra payload (same for all clients)")
+parser.add_argument('--payload-size', '-P', dest='payload_size', type=int, help="extra payload (same for all clients)", default=10)
 parser.add_argument('--interval', '-i', dest='interval', type=int, help="sleep between two publish (same for all clients)", default=1)
 
 args = parser.parse_args()
@@ -85,8 +85,6 @@ def start_poll_loop(args, avg_latency, avg_count):
             avg_latency.value = (avg_latency.value * avg_count.value + average) / (avg_count.value + 1)
             avg_count.value += 1
     
-
-
 def main(args, avg_latency, avg_count):
     init_clients(args)
     start_poll_loop(args, avg_latency, avg_count)

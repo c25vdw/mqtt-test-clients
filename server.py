@@ -7,18 +7,18 @@ parser = argparse.ArgumentParser(description="MQTT distributed dumb clients runn
 parser.add_argument('--host', '-H', dest='host', type=str, help="host address of the broker", default="127.0.0.1")
 parser.add_argument('--port', '-p', dest='port', type=int, help="port of the broker", default=1883)
 parser.add_argument('--num', '-n', dest='num', type=int, help="number of duplcated clients", default=1)
-parser.add_argument('--extra-payload', '-P', dest='extra_payload', type=str, help="extra payload (same for all clients)")
+parser.add_argument('--payload', '-P', dest='payload_size', type=int, help="extra payload (same for all clients)", default=100)
 parser.add_argument('--interval', '-i', dest='interval', type=int, help="sleep between two publish (same for all clients)", default=1)
 
 args = parser.parse_args()
 
-print(args.host, args.port, args.num, args.extra_payload, args.interval)
+print(args.host, args.port, args.num, args.payload_size, args.interval)
 def on_message(c, userdata, msg):
 
     payload = json.loads(msg.payload)
     cid = payload['cid']
-    aid = payload['aid']
-    extra = payload['extra']
+    extra = args.payload_size * 'a'
+    payload['extra'] = extra
 
     c.publish(f"resp/{cid}", json.dumps(payload))
 
